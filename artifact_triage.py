@@ -191,7 +191,7 @@ def dump_event_logs(event_logs):
             evtx_log_no_extension = evtx_log_name.split('.')[0]
             evtx_output_json_path = os.path.normpath(f'{tmp_path}{os.sep}{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}_{evtx_log_no_extension}')
             # evtx_dump -f <output_file> -o json <input_file> will dump contents of evtx records as JSON to a given file
-            cmd = f'{evtx_dump_exe} -f {evtx_output_json_path} -t 1 -o json {evtx_log}'
+            cmd = f'{evtx_dump_exe} -f {evtx_output_json_path} -t 1 -o json "{evtx_log}"'
             if debug:
                 console.print(f'[purple][*][white] Command: {cmd}')
             so = os.popen(cmd).read()
@@ -282,7 +282,7 @@ def parse_event_logs(dumped_event_logs, start_date, end_date):
 def hunt_event_logs(artifact_path):
     console.print('\n[cyan][+][white] Hunting event logs with Chainsaw')
     # -q flag suppresses output
-    cmd = f'{chainsaw_exe} hunt {artifact_path} -s {sigma_rules_path} --mapping {chainsaw_path}{os.sep}mappings{os.sep}sigma-event-logs-all.yml -r {chainsaw_rules_path} --skip-errors --csv --full --metadata --output {report_path}'
+    cmd = f'{chainsaw_exe} hunt "{artifact_path}" -s {sigma_rules_path} --mapping {chainsaw_path}{os.sep}mappings{os.sep}sigma-event-logs-all.yml -r {chainsaw_rules_path} --skip-errors --csv --full --metadata --output {report_path}'
     if debug:
         console.print(f'[purple][*][white] Command: {cmd}')
     so = os.popen(cmd).read()
@@ -294,7 +294,7 @@ def hunt_event_logs(artifact_path):
 #  
 def search_event_logs(artifact_path, search):
     console.print('\n[cyan][+][white] Searching event logs with Chainsaw')
-    cmd = f'{chainsaw_exe} search -e "{search}" {artifact_path} --skip-errors --extension "evtx" -o {report_path}{os.sep}evtx_chainsaw_search.txt'
+    cmd = f'{chainsaw_exe} search -e "{search}" "{artifact_path}" --skip-errors --extension "evtx" -o {report_path}{os.sep}evtx_chainsaw_search.txt'
     if debug:
         console.print(f'[purple][*][white] Command: {cmd}')
     so = os.popen(cmd).read()
